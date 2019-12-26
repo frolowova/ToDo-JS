@@ -4,176 +4,130 @@ window.onload = function () {
 
     let countTotal = 0;
     let countComplete = 0;
-
-    addTask();
-    delTask();
-    editTask();
-    doneTask();
-    viewcountComplete();
-
-
-
-    // Добавляем таску на страницу
-    function addItemTask(message) {
-        const taskConntainer = document.querySelector(".list-tasks-js");
-        let itemTask = document.createElement("div");
-
-        itemTask.className = "item-task";
-        itemTask.innerHTML = `<input type="checkbox" class="done" /> ${message} <span class="edit-task"></span><span class="close"></span>`;
-
-        taskConntainer.append(itemTask);
+    const linkTo = {
+        inputClass: ".inp-tsk-js",
+        listClass: ".list-tasks-js",
+        btnSave: ".btn",
+        divNoTasksYet: ".no-tasks",
+        divTotalCount: ".total-tasks__count",
+        divCompleteCount: ".completed-tasks__count"
     }
 
-    //Возращаем значение input
-    function inputRead() {
-        const messageFromInput = document.querySelector(".inp-tsk-js");
-        return messageFromInput.value;
-    }
+    // Слушаем клик по кнопке или enter в input-e. ADD TASK
+    document.querySelector(linkTo.btnSave).addEventListener("click", addTask)
 
-    // Чистим Input
-    function inputClear() {
-        const messageFromInput = document.querySelector(".inp-tsk-js");
-        messageFromInput.value = "";
-    }
+    document.querySelector(linkTo.inputClass).addEventListener("keydown", (e) => {
+        if (e.keyCode == 13) {
+            addTask();
+        }
+    })
 
-    // Выводим countTotal (сколько всего задач)
-    function editCountTotal() {
-        const divTotal = document.querySelector(".total-tasks__count")
-        divTotal.innerHTML = `${countTotal}`;
-    }
+    // Слушаем клик по крестику. DEL TASK
+    document.querySelector(linkTo.listClass).addEventListener("click", e => {
+        // Если событие клик было не по кнопке close, то выходим без действий
+        if (e.target.className != "close") return;
 
-    // Выводим completeTotal (сколько выполненных задач)
-    function viewcountComplete() {
-        const divCompleted = document.querySelector(".completed-tasks__count")
-        divCompleted.innerHTML = `${countComplete}`;
-    }
+        delTask(e);
+    })
 
-    // Функция следит за значением счётчика общего количества задач
-    function taskCountTotal(count, val) {
-        if (val == "plus") countTotal++;
-        if (val == "minus") countTotal--;
-        if (countTotal > 0) {
-            const noTasks = document.querySelector(".no-tasks");
-            noTasks.style.display = "none";
-        } else {
-            const noTasks = document.querySelector(".no-tasks");
-            noTasks.style.display = "block";
+    // Слушаем нажатие на Выполнено (checkbox)    
+    document.querySelector(linkTo.listClass).addEventListener("click", e => {
+        // Если событие клик было не по кнопке done (checkbox), то выходим без действий
+        if (e.target.className != "done") return;
+
+        doneTask(e);
+    })
+
+
+    function addTask() {
+        const messageFromInput = inputRead(linkTo.inputClass);
+
+        // Если поле не пустое, то добавляем значение input в поле задач (тасков)
+        if (messageFromInput) {
+            addItemTask(messageFromInput, linkTo.listClass);
+            inputClear(linkTo.inputClass);
+            countTotal++;
+            editCountTotal(countTotal, linkTo.divNoTasksYet, linkTo.divTotalCount);
         }
     }
 
 
-    // Слушаем клик по кнопке или enter в input-e. ADD TASK
-    function addTask() {
-        document.querySelector(".btn").addEventListener("click", () => {
-            const messageFromInput = inputRead();
-            // Если поле не пустое, то добавляем значение input в поле задач (тасков)
-            if (messageFromInput) {
-                addItemTask(messageFromInput);
-                inputClear();
-                taskCountTotal(countTotal, "plus");
-                editCountTotal();
-            }
-        })
+    function delTask(e) {
+        // Проверяем удаляемая функция отмечена ли как выполненная.
+        let taskComplished = e.target.parentNode.firstChild.checked;
+        if (taskComplished) {
+            countComplete--;
+            viewCountComplete(countComplete, linkTo.divCompleteCount);
+        }
 
-        document.querySelector(".inp-tsk-js").addEventListener("keydown", (e) => {
-            // Если нажат Enter
-            if (e.keyCode === 13) {
-                const messageFromInput = inputRead();
-                // Если поле не пустое, то добавляем значение input в поле задач (тасков)
-                if (messageFromInput) {
-                    addItemTask(messageFromInput);
-                    inputClear();
-                    taskCountTotal(countTotal, "plus");
-                    editCountTotal();
-                }
-            }
-        })
+        // Удаляем родитель кнопки close на которой было событие. Но может не работать в старых браузерах
+        e.target.parentNode.remove();
+        countTotal--;
+        editCountTotal(countTotal, linkTo.divNoTasksYet, linkTo.divTotalCount);
     }
 
 
-    // Функция удалающая задачу из списка
-    function delTask() {
-        document.querySelector(".list-tasks-js").addEventListener("click", e => {
-            // Если событие клик было не по кнопке close, то выходим без действий
-            if (e.target.className != "close") return;
+    function doneTask(e) {
+        // Если задача отмечена как выполненная
+        if (e.target.checked) {
+            // соседний элемент справа зачёркиваем
+            e.target.nextElementSibling.style.setProperty("text-decoration", "line-through");
+            e.target.nextElementSibling.style.setProperty("opacity", ".3");
+            countComplete++;
+        }
+        // Если задача отмечена как невыполнена
+        if (!e.target.checked) {
+            // соседний элемент справа зачёркиваем
+            e.target.nextElementSibling.style.setProperty("text-decoration", "none");
+            e.target.nextElementSibling.style.setProperty("opacity", "1");
+            countComplete--;
+        }
 
-            // Проверяем удаляемая функция отмечена ли как выполненная.
-            let taskComplished = e.target.parentNode.firstChild.checked;
-            if (taskComplished) {
-                countComplete--;
-                viewcountComplete();
-            }
+        viewCountComplete(countComplete, linkTo.divCompleteCount);
+    }
+}
 
-            // Удаляем родитель кнопки close на которой было событие. Но может не работать в старых браузерах
-            e.target.parentNode.remove();
-            taskCountTotal(countTotal, "minus");
-            editCountTotal();
-        })
+
+
+
+function addItemTask(message, listClass) {
+    const taskConntainer = document.querySelector(listClass);
+    let itemTask = document.createElement("div");
+
+    itemTask.className = "item-task";
+    itemTask.innerHTML = `<input type="checkbox" class="done" /> 
+    <div class="txt" contentEditable="true" title="Изменить">${message} </div>
+    <span class="edit-task" title="Сохранить изменения"></span>
+    <span class="close"></span>`;
+
+    taskConntainer.append(itemTask);
+}
+
+function inputRead(inputClass) {
+    return document.querySelector(inputClass).value;
+}
+
+function inputClear(inputClass) {
+    document.querySelector(inputClass).value = "";
+}
+
+function viewCountComplete(countComplete, divCompleteCount) {
+    const divCompleted = document.querySelector(divCompleteCount);
+    divCompleted.innerHTML = `${countComplete}`;
+}
+
+// Отображение счётчика общего количества задач. 
+// А также контроль отображения блока с ифнормацией о том, что пока нет ни одной записи
+function editCountTotal(countTotal, divNoTasksYet, divTotalCount) {
+    const noTasks = document.querySelector(divNoTasksYet);
+    const divTotal = document.querySelector(divTotalCount);
+
+    if (countTotal > 0) {
+        noTasks.style.display = "none";
+    } else {
+        noTasks.style.display = "block";
     }
 
-
-    function editTask() {
-        document.querySelector(".list-tasks-js").addEventListener("click", e => {
-            // Если событие клик было не по кнопке редактирования, то выходим без действий
-            if (e.target.className != "edit-task") return;
-
-            const inputTask = document.querySelector(".inp-tsk-js");
-            let messageToEdit = e.target.parentNode.innerText;
-            inputTask.value = messageToEdit;
-            console.log("edit" + inputTask.value)
-
-            // Далее слушаем . Если esc, то отменяем что либо. 
-            // Если enter или Кнопка записать, то innerHTML
-            document.querySelector(".inp-tsk-js").addEventListener("keydown", (e) => {
-                // Если нажат Esc
-                if (e.keyCode === 27) {
-                    inputClear();
-                    return;
-                }
-            })
-
-            document.querySelector(".btn").addEventListener("click", () => {
-                inputTask.innerHTML = inputTask.value;
-                inputClear();
-            })
-
-            document.querySelector(".inp-tsk-js").addEventListener("keydown", (e) => {
-                // Если нажат Enter
-                if (e.keyCode === 13) {
-                    const messageFromInput = inputRead();
-                    console.log("edit" + inputTask.value)
-                    // Если поле не пустое, то добавляем значение input в поле задач (тасков)
-                    if (messageFromInput) {
-                        inputTask.innerHTML = messageFromInput;
-                        inputClear();
-                    }
-                }
-
-            })
-        })
-    }
-
-
-    // Функция отображающая, что задача выполнена
-    function doneTask() {
-        document.querySelector(".list-tasks-js").addEventListener("click", e => {
-            // Если событие клик было не по кнопке done (checkbox), то выходим без действий
-            if (e.target.className != "done") return;
-
-            // Если задача отмечена как выполненная
-            if (e.target.checked) {
-                e.target.parentNode.style.setProperty("text-decoration", "line-through");
-                e.target.parentNode.style.setProperty("color", "#cac4b0");
-                countComplete++;
-            }
-            // Если задача отмечена как невыполнена
-            if (!e.target.checked) {
-                e.target.parentNode.style.setProperty("text-decoration", "none");
-                e.target.parentNode.style.setProperty("color", "#000000");
-                countComplete--;
-            }
-
-            viewcountComplete();
-        })
-    }
+    divTotal.innerHTML = `${countTotal}`;
+    return countTotal;
 }

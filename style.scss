@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans:400,700|Roboto:300,400,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+$font-title: Roboto, sans-serif;
+$font-text: PT Sans;
+$font-clr: rgb(210, 216, 226);
+
+body {
+    background-color: rgb(31, 30, 30);
+}
+
+.wrapper {
+    height: 100vh;
+    position: relative;
+    font-family: $font-text;
+    background-color: rgb(31, 30, 30);
+}
+
+.header {
+    // border-bottom: 1px solid rgb(221, 221, 221);
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    // gap: 10px;
+
+    .header__title {
+        margin-top: 20px;
+        font-family: $font-title;
+        color: $font-clr;
+    }
+
+    .counter-tasks {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        // margin-bottom: 10px;
+        color: $font-clr;
+    }
+}
+
+.list-tasks-out {
+    height: calc(100% - 165px);
+    min-height: 50px;
+    overflow: auto;
+    color: $font-clr;
+}
+
+.no-tasks {
+    display: block;
+    margin-top: 2em;
+    text-align: center;
+    color: $font-clr;
+}
+
+.item-task {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    padding: 10px 10px;
+    font-size: 24px;
+    color: $font-clr;
+}
+.item-task .close {
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    opacity: 40%;
+    color: $font-clr;
+}
+.item-task .close:after {
+    content: "\2716";
+}
+.item-task .close:hover, .close:active {
+    opacity: 100%;
+}
+
+.edit-task {
+    display: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    opacity: 40%; 
+}
+.item-task .edit-task:after {
+    content: "\270E";
+}
+.item-task .edit-task:hover, .edit-task:active {
+    opacity: 100%;
+}
+
+// Чётные таски (записи) делаем с другим цветом фона
+.item-task:nth-child(even) {
+    background-color: rgb(49, 46, 46);
+}
+.item-task .done {
+    align-self: center;
+    margin-right: 10px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    opacity: 50%;
+}
+.item-task:hover .done {
+    opacity: 100%;
+}
+
+.item-task .txt {
+    color: $font-clr;
+    opacity: 1;
+}
+
+.item-task .txt:focus + .edit-task {
+    display: inline-block;
+}
+
+
+
+.input-tasks {
+    display: flex;
+    bottom: 0;
+    text-align: center;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 1px;
+}
+.input-tasks input{
+    background: transparent;
+    color: rgb(221, 221, 221);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 90%;
+    height: 50px;
+    font-size: 38px;
+    border: none;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    outline: none;
+    transition: .3s;
+}
+
+
+.btn {
+    display: inline-block;
+    align-self: center;
+}
+.btn a{
+    padding:14px;
+    background-color: transparent;
+    border-bottom: 1px solid rgb(252, 230, 170);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: aliceblue;
+    transition-duration: .5s;
+    z-index: 2;
+}
+.btn a:active {
+    background: linear-gradient(90deg, #424240, #666665, #424240);
+    background-size: 400%;
+    background-position-x: 100%;
+    z-index: 2;
+    animation: animate .2s linear 1;
+}
+@keyframes animate {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 100%;
+    }
+}
+
+
+
+// У нас mobile-first, поэтому если экран большой, то открываем его от краёв и даём фиксированную ширину
+@media screen and (min-width:1024px) {
+    .wrapper {
+        width: 1000px;
+        justify-content: center;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .input-tasks input {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-height: 283px) {
+    .header {
+        grid-template-columns: auto;
+        gap: 0;
+    }
+    .header .header__title {
+        margin-top: 5px;
+    }
+    .input-tasks {
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+    .input-tasks input {
+        height: 25px;
+        font-size: 18px;
+    }
+    .btn a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
+
