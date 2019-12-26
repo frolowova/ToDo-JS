@@ -21,14 +21,14 @@ body {
     background-color: rgb(31, 30, 30);
 }
 
-.header {
+.footer {
     // border-bottom: 1px solid rgb(221, 221, 221);
     text-align: center;
     display: grid;
     grid-template-columns: 1fr;
     // gap: 10px;
 
-    .header__title {
+    .footer__title {
         margin-top: 20px;
         font-family: $font-title;
         color: $font-clr;
@@ -43,7 +43,7 @@ body {
 }
 
 .list-tasks-out {
-    height: calc(100% - 165px);
+    height: calc(100% - 135px);
     min-height: 50px;
     overflow: auto;
     color: $font-clr;
@@ -122,7 +122,6 @@ body {
     display: flex;
     bottom: 0;
     text-align: center;
-    margin-top: 30px;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 1px;
@@ -191,11 +190,11 @@ body {
 }
 
 @media screen and (max-height: 283px) {
-    .header {
+    .footer {
         grid-template-columns: auto;
         gap: 0;
     }
-    .header .header__title {
+    .footer .footer__title {
         margin-top: 5px;
     }
     .input-tasks {

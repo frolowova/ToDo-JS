@@ -17,7 +17,7 @@ body {
   background-color: #1f1e1e;
 }
 
-.header {
+.footer {
   text-align: center;
   display: -ms-grid;
   display: grid;
@@ -25,13 +25,13 @@ body {
       grid-template-columns: 1fr;
 }
 
-.header .header__title {
+.footer .footer__title {
   margin-top: 20px;
   font-family: Roboto, sans-serif;
   color: #d2d8e2;
 }
 
-.header .counter-tasks {
+.footer .counter-tasks {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr 1fr;
@@ -40,7 +40,7 @@ body {
 }
 
 .list-tasks-out {
-  height: calc(100% - 165px);
+  height: calc(100% - 135px);
   min-height: 50px;
   overflow: auto;
   color: #d2d8e2;
@@ -129,7 +129,6 @@ body {
   display: flex;
   bottom: 0;
   text-align: center;
-  margin-top: 30px;
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 1px;
@@ -215,12 +214,12 @@ body {
 }
 
 @media screen and (max-height: 283px) {
-  .header {
+  .footer {
     -ms-grid-columns: auto;
         grid-template-columns: auto;
     gap: 0;
   }
-  .header .header__title {
+  .footer .footer__title {
     margin-top: 5px;
   }
   .input-tasks {
